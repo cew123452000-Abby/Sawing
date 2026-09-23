@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活衣物外科醫生：縫法修補診斷室</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        clinic: {
+                            teal: '#0d9488',
+                            lightTeal: '#ccfbf1',
+                            mint: '#10b981',
+                            sky: '#0284c7',
+                            lightSky: '#e0f2fe',
+                            warmOrange: '#f97316',
+                            cream: '#fefce8',
+                            bg: '#f0fdf4',
+                            border: '#bbf7d0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#bbf7d0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .clinic-card {
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.1), 0 8px 10px -6px rgba(13, 148, 136, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .prescription-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -3px rgba(13, 148, 136, 0.2);
+        }
+
+        @keyframes pulse-light {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.9; }
+        }
+
+        .animate-pulse-light {
+            animation: pulse-light 2.5s infinite ease-in-out;
+        }
+
+        /* Print styles for portfolio export */
+        @media print {
+            body {
+                background: white !important;
+                background-image: none !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .certificate-container {
+                box-shadow: none !important;
+                border: 2px solid #0d9488 !important;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between selection:bg-clinic-teal selection:text-white">
+
+    <!-- Header Navbar -->
+    <header class="bg-white/90 backdrop-blur-md border-b-2 border-clinic-border sticky top-0 z-40 px-4 py-3 shadow-sm no-print">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-clinic-teal text-white flex items-center justify-center font-black text-xl shadow-md">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg md:text-xl text-teal-900 leading-tight">衣物外科診所</h1>
+                    <p class="text-xs text-teal-600 font-medium">生活衣物修補與縫法診斷室</p>
+                </div>
+            </div>
+            
+            <!-- Doctor Info Badge (Hidden during registration) -->
+            <div id="header-doctor-badge" class="hidden flex items-center gap-2 bg-clinic-lightTeal px-3 py-1.5 rounded-full border border-teal-200">
+                <i class="fa-solid fa-id-card text-clinic-teal"></i>
+                <span id="header-doctor-name" class="font-bold text-sm text-teal-900">實習醫師</span>
+                <span id="case-progress-pill" class="bg-clinic-teal text-white text-xs px-2 py-0.5 rounded-full font-bold ml-1">進度: 0/4</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 md:p-6 flex flex-col justify-center">
+
+        <!-- ==================== STEP 0: RECEPTION / REGISTRATION ==================== -->
+        <section id="step-0-registration" class="bg-white rounded-3xl p-6 md:p-10 border-2 border-clinic-border clinic-card max-w-2xl mx-auto w-full relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-clinic-lightTeal rounded-full blur-2xl opacity-60"></div>
+            
+            <div class="text-center mb-8">
+                <span class="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">家政「生活新人王」單元</span>
+                <h2 class="text-2xl md:text-3xl font-black text-teal-950 mt-2">歡迎報到！衣物外科實習醫師</h2>
+                <p class="text-slate-600 mt-2 text-sm md:text-base">日常衣物發生破損或鈕扣脫落時，你懂得運用正確的縫法與工具進行「微創手術」嗎？請登錄身分，開啟診斷修補之旅！</p>
+            </div>
+
+            <form id="registration-form" onsubmit="startClinic(event)" class="space-y-5 relative z-10">
+                <div>
+                    <label for="doctor-name" class="block text-sm font-bold text-slate-700 mb-1">
+                        <i class="fa-solid fa-pen text-clinic-teal mr-1"></i> 實習醫師姓名 / 座號
+                    </label>
+                    <input type="text" id="doctor-name" required placeholder="例如：701班 12號 王小明" class="w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-clinic-teal focus:ring-2 focus:ring-teal-100 outline-none text-slate-800 font-bold transition">
+                </div>
+
+                <div class="bg-clinic-cream border border-amber-200 rounded-2xl p-4 text-xs md:text-sm text-amber-900 space-y-2">
+                    <div class="font-bold flex items-center gap-2 text-amber-800">
+                        <i class="fa-solid fa-lightbulb text-amber-500 text-base"></i> 診所學習目標：
+                    </div>
+                    <ul class="list-disc list-inside space-y-1 text-slate-700 pl-1">
+                        <li>分析平針縫、回針縫與鈕扣縫（含扣腳繞線）的物理結構與耐拉力。</li>
+                        <li>針對褲襠撕裂、鈕扣脫落、袋口縮口等情境，精準處方。</li>
+                        <li>建立布剪、針插、頂針器等工具的安全規範。</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full bg-clinic-teal hover:bg-teal-700 text-white font-black py-4 rounded-xl shadow-lg shadow-teal-600/30 hover:shadow-teal-600/50 transition transform hover:-translate-y-0.5 active:translate-y-0 text-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-stethoscope"></i> 領取實習醫師證，開啟診所
+                </button>
+            </form>
+        </section>
+
+        <!-- ==================== CASE DIAGNOSIS ROOM ==================== -->
+        <section id="step-case-room" class="hidden space-y-6">
+            
+            <!-- Progress Tracker Bar -->
+            <div class="bg-white rounded-2xl p-4 border border-clinic-border shadow-sm flex flex-col md:flex-row justify-between items-center gap-3">
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <span class="text-xs font-black bg-teal-100 text-teal-800 px-2.5 py-1 rounded-lg" id="case-number-badge">病例 01</span>
+                    <h3 class="font-bold text-slate-800 text-sm md:text-base truncate" id="case-title">病患載入中...</h3>
+                </div>
+                <!-- Step circles -->
+                <div class="flex items-center gap-2 text-xs font-bold w-full md:w-auto justify-center">
+                    <div id="step-dot-1" class="w-8 h-8 rounded-full bg-clinic-teal text-white flex items-center justify-center transition-all">1</div>
+                    <div class="w-6 h-0.5 bg-slate-200"></div>
+                    <div id="step-dot-2" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center transition-all">2</div>
+                    <div class="w-6 h-0.5 bg-slate-200"></div>
+                    <div id="step-dot-3" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center transition-all">3</div>
+                    <div class="w-6 h-0.5 bg-slate-200"></div>
+                    <div id="step-dot-4" class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center transition-all">4</div>
+                </div>
+            </div>
+
+            <!-- Case Card Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: Patient File & Visualizer -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 border-2 border-clinic-border clinic-card flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest"><i class="fa-solid fa-clipboard-user mr-1"></i> 衣物外科診斷病歷卡</span>
+                            <span class="bg-red-100 text-red-700 text-xs px-2.5 py-0.5 rounded-full font-bold" id="case-urgency">急診級別：中</span>
+                        </div>
+                        
+                        <h2 class="text-xl font-extrabold text-slate-900 mb-2" id="patient-name">病患名稱</h2>
+                        <div class="bg-teal-50/70 border border-teal-100 rounded-2xl p-4 mb-4">
+                            <h4 class="text-xs font-bold text-teal-800 uppercase mb-1">診斷主訴與損壞情境：</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed" id="patient-symptom">症狀描述載入中...</p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Sewing/Force Visualizer Container -->
+                    <div class="bg-slate-900 rounded-2xl p-4 my-2 relative overflow-hidden flex flex-col items-center justify-center min-h-[220px]">
+                        <div class="absolute top-2 left-3 text-[10px] text-teal-400 font-mono flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                            STRUCTURAL ANALYSIS VISUALIZER
+                        </div>
+                        <canvas id="visualizer-canvas" class="w-full h-44 rounded-lg my-1"></canvas>
+                        <p class="text-xs text-slate-300 text-center font-medium mt-1" id="visualizer-caption">縫線物理結構與布料受力模擬圖</p>
+                    </div>
+
+                    <!-- Medical Notes / Key Knowledge Tip -->
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2.5 mt-2">
+                        <i class="fa-solid fa-circle-info text-amber-600 text-base flex-shrink-0 mt-0.5"></i>
+                        <p id="case-hint">提示：分析此布料部位受力狀況，選擇結構最相符的縫法與工具！</p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Diagnostic Prescriptions (3 Options) -->
+                <div class="lg:col-span-7 space-y-4 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-kit-medical text-clinic-teal"></i> 請開立最適切的微創手術處方（單選）：
+                        </h3>
+
+                        <div class="space-y-3" id="prescriptions-container">
+                            <!-- Options will be populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Doctor Confirmation Action Bar -->
+                    <div class="bg-white rounded-2xl p-4 border border-clinic-border flex justify-between items-center shadow-sm">
+                        <span class="text-xs text-slate-500 font-medium">請選擇處方後，進行診斷說明會診</span>
+                        <button id="btn-submit-diagnosis" disabled onclick="evaluateDiagnosis()" class="bg-slate-300 text-slate-500 cursor-not-allowed font-bold px-6 py-3 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-file-signature"></i> 確定處方並診斷
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DIAGNOSIS FEEDBACK MODAL ==================== -->
+        <div id="feedback-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 border-2 shadow-2xl transform transition-all relative overflow-hidden" id="modal-box">
+                
+                <div class="text-center space-y-3">
+                    <div id="modal-icon-bg" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl shadow-inner">
+                        <i id="modal-icon" class="fa-solid"></i>
+                    </div>
+
+                    <span id="modal-status-badge" class="text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">診斷結果</span>
+                    
+                    <h3 id="modal-title" class="text-2xl font-black text-slate-900">會診結論</h3>
+                    
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-left space-y-2">
+                        <div class="text-xs font-bold text-slate-400 uppercase">外科醫生物理 structure 解析：</div>
+                        <p id="modal-explanation" class="text-sm text-slate-700 leading-relaxed">詳細解析說明...</p>
+                    </div>
+
+                    <div id="modal-myth-box" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3 text-left text-xs text-amber-900">
+                        <span class="font-bold block mb-1"><i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> 迷思釐清：</span>
+                        <span id="modal-myth-text">迷思內容...</span>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex gap-3">
+                    <button id="modal-retry-btn" onclick="retryCase()" class="hidden flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> 重新開立處方
+                    </button>
+                    <button id="modal-next-btn" onclick="nextCase()" class="flex-1 bg-clinic-teal hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition shadow-md shadow-teal-600/30">
+                        進入下一個病例 <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== STEP 5: FINAL REPORT & CERTIFICATE ==================== -->
+        <section id="step-final-report" class="hidden space-y-6">
+            
+            <!-- Certificate Card (Printable) -->
+            <div class="bg-white rounded-3xl p-6 md:p-10 border-4 border-clinic-teal clinic-card relative overflow-hidden certificate-container">
+                <!-- Certificate Decorative Seal -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-teal-50 rounded-full border-4 border-teal-100 -z-0"></div>
+                <div class="absolute top-6 right-6 text-clinic-teal opacity-15 text-7xl no-print">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+
+                <!-- Certificate Header -->
+                <div class="text-center border-b-2 border-teal-100 pb-6 mb-6 relative z-10">
+                    <div class="inline-flex items-center gap-2 bg-clinic-lightTeal px-4 py-1.5 rounded-full text-clinic-teal font-extrabold text-xs md:text-sm mb-2">
+                        <i class="fa-solid fa-graduation-cap"></i> 國中綜合活動領域家政課程「生活新人王」學習證明
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-black text-teal-950 tracking-tight">衣物外科主治醫師執照</h2>
+                    <p class="text-slate-500 text-sm mt-1">CERTIFICATE OF APPAREL SURGERY CLINICAL COMPETENCY</p>
+                </div>
+
+                <!-- Doctor Metadata -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center relative z-10">
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block">獲證醫師</span>
+                        <span id="report-doctor-name" class="text-lg font-black text-teal-900">小明</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block">診斷正確率</span>
+                        <span id="report-accuracy" class="text-lg font-black text-clinic-mint">100% (4/4)</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-slate-400 font-bold block">考核日期</span>
+                        <span id="report-date" class="text-sm font-bold text-slate-700">2026/09/23</span>
+                    </div>
+                </div>
+
+                <!-- Skill Competency Breakdown Grid -->
+                <div class="space-y-4 mb-8 relative z-10">
+                    <h3 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-chart-radar text-clinic-teal"></i> 手縫修補知識與技能掌握分析表
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Competency 1 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex justify-between items-center text-sm font-bold">
+                                <span class="text-slate-800"><i class="fa-solid fa-shield-halved text-teal-600 mr-1.5"></i> 回針縫牢固度 (褲襠修補)</span>
+                                <span id="badge-comp-1" class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">熟練掌握</span>
+                            </div>
+                            <p class="text-xs text-slate-600">理解一進一退交疊結構能承載大張力拉扯，適用於褲襠與受力縫線。</p>
+                        </div>
+
+                        <!-- Competency 2 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex justify-between items-center text-sm font-bold">
+                                <span class="text-slate-800"><i class="fa-solid fa-circle-dot text-teal-600 mr-1.5"></i> 鈕扣縫與扣腳繞線 (襯衫扣)</span>
+                                <span id="badge-comp-2" class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">熟練掌握</span>
+                            </div>
+                            <p class="text-xs text-slate-600">懂得預留布料厚度空間並進行繞線「扣腳」，確保扣合平整不變形。</p>
+                        </div>
+
+                        <!-- Competency 3 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex justify-between items-center text-sm font-bold">
+                                <span class="text-slate-800"><i class="fa-solid fa-arrows-left-right-to-line text-teal-600 mr-1.5"></i> 平針縫縮口與疏縫 (舊衣改造)</span>
+                                <span id="badge-comp-3" class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">熟練掌握</span>
+                            </div>
+                            <p class="text-xs text-slate-600">體會平針縫一上一下滑順特性，能快速用於兩片布臨時固定與縮口抽緊。</p>
+                        </div>
+
+                        <!-- Competency 4 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200 space-y-2">
+                            <div class="flex justify-between items-center text-sm font-bold">
+                                <span class="text-slate-800"><i class="fa-solid fa-toolbox text-teal-600 mr-1.5"></i> 手縫工具安全規範 (安全衛生)</span>
+                                <span id="badge-comp-4" class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">熟練掌握</span>
+                            </div>
+                            <p class="text-xs text-slate-600">落實布剪專剪布料不剪紙、針用畢插回針插收納等正確安全習慣。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Review Table for Student Portfolio -->
+                <div class="border-t border-slate-200 pt-6 relative z-10">
+                    <h4 class="font-bold text-slate-800 text-sm mb-3">病例臨床會診記錄總覽（可保存至學習歷程檔案）：</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700">
+                                    <th class="p-2.5 border border-slate-200 rounded-tl-lg">病例</th>
+                                    <th class="p-2.5 border border-slate-200">損壞情境</th>
+                                    <th class="p-2.5 border border-slate-200">正確處方縫法/工具</th>
+                                    <th class="p-2.5 border border-slate-200 rounded-tr-lg">核心縫線物理與安全邏輯</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 text-slate-600">
+                                <tr>
+                                    <td class="p-2.5 border border-slate-200 font-bold">01. 運動褲病患</td>
+                                    <td class="p-2.5 border border-slate-200">褲襠受力撕裂 5cm</td>
+                                    <td class="p-2.5 border border-slate-200 text-teal-700 font-bold">回針縫</td>
+                                    <td class="p-2.5 border border-slate-200">針腳一進一退密集交疊，耐拉扯不再次破裂。</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border border-slate-200 font-bold">02. 制服襯衫病患</td>
+                                    <td class="p-2.5 border border-slate-200">領扣脫落需重縫</td>
+                                    <td class="p-2.5 border border-slate-200 text-teal-700 font-bold">鈕扣縫 + 扣腳繞線</td>
+                                    <td class="p-2.5 border border-slate-200">繞線 3 圈形成「扣腳」，預留布料厚度防止扣眼擠壓。</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border border-slate-200 font-bold">03. 舊衣抱枕病患</td>
+                                    <td class="p-2.5 border border-slate-200">兩片布疏縫與袋口縮緊</td>
+                                    <td class="p-2.5 border border-slate-200 text-teal-700 font-bold">平針縫 (0.3-0.5cm)</td>
+                                    <td class="p-2.5 border border-slate-200">一上一下結構阻力小，能順利拉動縮口與快速暫時固定。</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 border border-slate-200 font-bold">04. 工具箱會診</td>
+                                    <td class="p-2.5 border border-slate-200">工具使用與收納安全</td>
+                                    <td class="p-2.5 border border-slate-200 text-teal-700 font-bold">剪刀朝下、針插收納</td>
+                                    <td class="p-2.5 border border-slate-200">布剪剪紙使刃口變鈍；針隨手放易滾動刺傷他人。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Certificate Footer Seal -->
+                <div class="mt-8 flex justify-between items-end text-xs text-slate-400 pt-4 border-t border-slate-100">
+                    <div>
+                        <p>發證單位：家政「生活新人王」衣物診治中心</p>
+                        <p>認證標準：具備獨立打理個人衣物之自理與修補能力</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-block border-b-2 border-slate-400 pb-1 px-4 font-bold text-slate-600">指導教師簽章欄</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons (Print / Restart) -->
+            <div class="flex flex-col sm:flex-row gap-4 no-print">
+                <button onclick="window.print()" class="flex-1 bg-clinic-teal hover:bg-teal-700 text-white font-black py-4 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-base">
+                    <i class="fa-solid fa-print"></i> 列印 / 儲存診斷報告 (放入學習歷程檔案)
+                </button>
+                <button onclick="restartClinic()" class="bg-white hover:bg-slate-100 text-slate-700 font-bold px-6 py-4 rounded-2xl border border-slate-300 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> 重新進行診斷測試
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 border-t border-clinic-border py-3 text-center text-xs text-slate-500 no-print">
+        <p>國中綜合活動領域家政課程 數位互動教材 | 專為國中七年級「生活新人王」設計</p>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+    <script>
+        // Web Audio Synthesizer sound engine
+        const AudioEngine = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playClick() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.05);
+            },
+            playSuccess() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const now = this.ctx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + idx * 0.08 + 0.25);
+                });
+            },
+            playError() {
+                this.init();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.setValueAtTime(180, now + 0.12);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+        };
+
+        // Application State
+        const state = {
+            doctorName: '',
+            currentCaseIndex: 0,
+            selectedOptionIndex: null,
+            userAnswers: [], // stores user history {caseIndex, selectedIndex, isCorrect, attempts}
+            attemptsCurrentCase: 0
+        };
+
+        // Case Definitions (Curriculum Scenarios)
+        const casesData = [
+            {
+                id: 1,
+                title: "第一關：運動褲病患（受力撕裂）",
+                urgency: "急診等級：高",
+                patientName: "急診病患 A 號：高級運動褲",
+                symptom: "打籃球進行大動作跨步時，褲襠縫線處承受巨大拉力，開線撕裂裂開了 5 公分。如果不進行耐拉扯的牢固修補，下次運動時又會再次爆開！",
+                hint: "褲襠屬於「高受力拉扯區」，一般的平針縫線易被拉開，需要交疊密實的縫法！",
+                options: [
+                    {
+                        text: "處方 A：採用【平針縫】，一上一下往前進，針距放大拉快速度。",
+                        isCorrect: false,
+                        explanation: "平針縫的線段僅是一上一下浮在布面，結構較鬆散且沒有前後鎖定。當褲襠受拉力時，線會順著移動而被輕易再次拉開！",
+                        myth: "迷思警示：平針縫雖然快，但無法承受運動褲襠等大張力拉扯部位！"
+                    },
+                    {
+                        text: "處方 B：採用【回針縫】，先用消失筆劃線，採用「一進一退交疊」進針。",
+                        isCorrect: true,
+                        explanation: "回針縫針腳密集交疊（進一針、退半針），形成連續鎖定的線條，牢固度極高，是修補褲襠受力開線的最完美處方！",
+                        myth: null
+                    },
+                    {
+                        text: "處方 C：拿出【拆線器】，直接把剩下的線通通拆掉不補。",
+                        isCorrect: false,
+                        explanation: "拆線器是用於拆除縫錯的線段或割開扣眼的工具，不具備任何縫合破洞的功能喔！",
+                        myth: "工具迷思：拆線器是破壞/修改工具，非修補縫合工具！"
+                    }
+                ],
+                drawVisualizer: function(ctx, canvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Fabric background
+                    ctx.fillStyle = '#1e293b';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Pants fabric illustration
+                    ctx.fillStyle = '#334155';
+                    ctx.beginPath();
+                    ctx.roundRect(30, 20, canvas.width - 60, canvas.height - 40, 12);
+                    ctx.fill();
+
+                    // Tear seam
+                    ctx.strokeStyle = '#ef4444';
+                    ctx.lineWidth = 4;
+                    ctx.setLineDash([6, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(80, canvas.height / 2);
+                    ctx.lineTo(canvas.width - 80, canvas.height / 2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Tension force arrows
+                    ctx.fillStyle = '#f97316';
+                    ctx.strokeStyle = '#f97316';
+                    ctx.lineWidth = 3;
+                    
+                    // Up Arrow
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2 - 10);
+                    ctx.lineTo(canvas.width / 2, canvas.height / 2 - 35);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2 - 35, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Down Arrow
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2, canvas.height / 2 + 10);
+                    ctx.lineTo(canvas.width / 2, canvas.height / 2 + 35);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2 + 35, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Text labels
+                    ctx.font = 'bold 12px Noto Sans TC';
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('褲襠高受力拉扯區 (撕裂 5cm)', canvas.width / 2, 35);
+                    ctx.fillStyle = '#fb923c';
+                    ctx.fillText('▲ 雙向運動張力 ▲', canvas.width / 2, canvas.height - 20);
+                }
+            },
+            {
+                id: 2,
+                title: "第二關：制服襯衫病患（鈕扣脫落）",
+                urgency: "急診等級：中",
+                patientName: "門診病患 B 號：校園制服襯衫",
+                symptom: "領口第一顆鈕扣掉落需要重新縫上。如果直接將鈕扣緊緊貼死在布面上縫牢，衣服扣上時扣眼會被擠壓變形、極難扣上。",
+                hint: "襯衫布料扣合時有「布料厚度」，必須預留空間讓扣眼順利崁入！",
+                options: [
+                    {
+                        text: "處方 A：【直接貼死縫】，鈕扣緊貼布面來回穿孔數次後，直接在背面打結。",
+                        isCorrect: false,
+                        explanation: "若沒有預留厚度空間，扣上襯衫時，扣眼布料會因為被鈕扣卡住而擠壓變形，不但難扣，也容易導致鈕扣再次被拉扯拽落！",
+                        myth: "迷思警示：鈕扣縫不是越緊貼布面越好！必須預留扣合厚度！"
+                    },
+                    {
+                        text: "處方 B：【扣腳繞線縫】，來回穿孔 3–4 次後，針穿出至「布與扣子之間」，繞線 3 圈形成「扣腳」再打結。",
+                        isCorrect: true,
+                        explanation: "正確！繞線 3 圈形成的「扣腳（Stitch Shank）」能騰出襯衫布料厚度空間，讓襯衫扣上後平整不變形！",
+                        myth: null
+                    },
+                    {
+                        text: "處方 C：【雙面膠黏貼法】，剪一塊雙面膠直接把扣子貼在襯衫上。",
+                        isCorrect: false,
+                        explanation: "雙面膠完全無法承受洗滌與日常生活拉扯，碰水即脫落，這不是手縫修補處方！",
+                        myth: null
+                    }
+                ],
+                drawVisualizer: function(ctx, canvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.fillStyle = '#1e293b';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Shirt Fabric Base
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillRect(40, 120, canvas.width - 80, 16);
+
+                    // Button
+                    ctx.fillStyle = '#f1f5f9';
+                    ctx.beginPath();
+                    ctx.roundRect(canvas.width / 2 - 50, 40, 100, 20, 6);
+                    ctx.fill();
+                    ctx.strokeStyle = '#94a3b8';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Button holes
+                    ctx.fillStyle = '#475569';
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2 - 20, 50, 4, 0, Math.PI * 2);
+                    ctx.arc(canvas.width / 2 + 20, 50, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Shank space indicator (The Thread Shank)
+                    ctx.strokeStyle = '#f59e0b';
+                    ctx.lineWidth = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2 - 20, 60);
+                    ctx.lineTo(canvas.width / 2 - 20, 120);
+                    ctx.moveTo(canvas.width / 2 + 20, 60);
+                    ctx.lineTo(canvas.width / 2 + 20, 120);
+                    ctx.stroke();
+
+                    // Thread Wrap Circle around shank
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.beginPath();
+                    ctx.ellipse(canvas.width / 2, 90, 28, 10, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.font = 'bold 12px Noto Sans TC';
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('鈕扣 (Button)', canvas.width / 2, 30);
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.fillText('◀ 扣腳繞線 3 圈 (預留布料厚度空間) ▶', canvas.width / 2, 94);
+                    ctx.fillStyle = '#7dd3fc';
+                    ctx.fillText('襯衫布料 (Shirt Fabric)', canvas.width / 2, 155);
+                }
+            },
+            {
+                id: 3,
+                title: "第三關：舊衣抱枕病患（疏縫與縮口）",
+                urgency: "急診等級：一般",
+                patientName: "改造病患 C 號：舊衣抱枕與束口袋",
+                symptom: "進行家政舊物改造時，需要將兩片布料「暫時固定（疏縫）」，並且要將圓形袋口「順暢地拉線縮緊」。",
+                hint: "此時需要針腳摩擦力小、滑順且能快速穿梭的縫法！",
+                options: [
+                    {
+                        text: "處方 A：採用【平針縫】，一上一下往前進，針距控制在 0.3–0.5 公分。",
+                        isCorrect: true,
+                        explanation: "平針縫結構阻力小、操作最快速！非常適合用於兩片布的暫時固定（疏縫），也最容易一拉線就把圓形袋口順暢抽緊！",
+                        myth: null
+                    },
+                    {
+                        text: "處方 B：採用【回針縫】，一進一退密密麻麻鎖死布料。",
+                        isCorrect: false,
+                        explanation: "回針縫針腳前後互相重疊鎖死，布料會被死死固定，線段根本拉不動，無法達成縮口抽緊的效果！",
+                        myth: "縫法迷思：回針縫適合受力補強，但不適用於需要「拉線縮口」或「臨時疏縫」的情境！"
+                    },
+                    {
+                        text: "處方 C：拿出【頂針器】，直接用頂針器把布料刺穿固定。",
+                        isCorrect: false,
+                        explanation: "頂針器是配戴在中指保護手指不被針尾刺傷的輔助工具，不是用來刺穿布料或固定縫法的工具！",
+                        myth: "工具迷思：頂針器是防護工具，不是針，更不是縫法！"
+                    }
+                ],
+                drawVisualizer: function(ctx, canvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.fillStyle = '#1e293b';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Wave Fabric (Pucker / Gather Effect)
+                    ctx.strokeStyle = '#10b981';
+                    ctx.lineWidth = 5;
+                    ctx.beginPath();
+                    let startX = 40;
+                    let endX = canvas.width - 40;
+                    ctx.moveTo(startX, canvas.height / 2);
+                    
+                    for (let x = startX; x <= endX; x += 30) {
+                        ctx.quadraticCurveTo(x + 15, canvas.height / 2 - 25, x + 30, canvas.height / 2);
+                    }
+                    ctx.stroke();
+
+                    // Running Stitch Dots / Thread
+                    ctx.fillStyle = '#facc15';
+                    for (let x = startX + 15; x < endX; x += 30) {
+                        ctx.beginPath();
+                        ctx.arc(x, canvas.height / 2 - 12, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    // Pull arrow
+                    ctx.fillStyle = '#facc15';
+                    ctx.font = 'bold 12px Noto Sans TC';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('平針縫 (Running Stitch) 一上一下順暢拉緊 ➔', canvas.width / 2, 35);
+                    ctx.fillStyle = '#6ee7b7';
+                    ctx.fillText('袋口輕鬆縮口抽緊 / 臨時疏縫固定', canvas.width / 2, canvas.height - 20);
+                }
+            },
+            {
+                id: 4,
+                title: "第四關：工具安全與迷思除錯會診",
+                urgency: "急診等級：安全檢查",
+                patientName: "會診項目 D 號：手縫工具箱安全規範",
+                symptom: "檢視工具箱中的布剪、針插、頂針器與手縫針。請選出完全符合「手縫操作安全與保養規範」的處方。",
+                hint: "布剪刃口非常精密，手縫針隨意放置極易引發刺傷危險！",
+                options: [
+                    {
+                        text: "處方 A：布剪剪完布料後，順便拿來剪紙張版型設計圖。",
+                        isCorrect: false,
+                        explanation: "布剪是專門裁切布料纖維的精密刀具！紙張含有粗糙木質纖維，拿布剪剪紙會迅速使刃口變鈍磨損！",
+                        myth: "工具迷思：布剪絕對不能拿來剪紙！剪紙請用一般紙剪！"
+                    },
+                    {
+                        text: "處方 B：暫時離開座位時，將手縫針與珠針直接擺放在桌面。",
+                        isCorrect: false,
+                        explanation: "手縫針在光滑桌面極易滾動掉落，可能刺傷自己或踩到的同學，非常危險！",
+                        myth: "安全迷思：針具用完或中途離開，必須立刻插回針插！"
+                    },
+                    {
+                        text: "處方 C：遞交布剪時刀口朝向自己、平直端朝外，針用畢立刻插回【針插】。",
+                        isCorrect: true,
+                        explanation: "完全正確！遵循剪刀安全遞交原則（握住刃部，柄朝他人或尖端朝下），且針用畢立刻插回針插，符合手縫安全規範！",
+                        myth: null
+                    }
+                ],
+                drawVisualizer: function(ctx, canvas) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.fillStyle = '#1e293b';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    // Pin Cushion illustration
+                    ctx.fillStyle = '#f43f5e';
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2 - 50, canvas.height / 2 + 10, 35, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#fda4af';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+
+                    // Needles stuck in Pin Cushion
+                    ctx.strokeStyle = '#e2e8f0';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(canvas.width / 2 - 70, canvas.height / 2 - 30);
+                    ctx.lineTo(canvas.width / 2 - 50, canvas.height / 2 + 5);
+                    ctx.moveTo(canvas.width / 2 - 30, canvas.height / 2 - 30);
+                    ctx.lineTo(canvas.width / 2 - 45, canvas.height / 2 + 5);
+                    ctx.stroke();
+
+                    // Scissors Illustration (Safety point down)
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.font = 'bold 36px FontAwesome';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('✂️', canvas.width / 2 + 60, canvas.height / 2 + 15);
+
+                    ctx.font = 'bold 12px Noto Sans TC';
+                    ctx.fillStyle = '#f8fafc';
+                    ctx.fillText('針用畢歸位【針插】', canvas.width / 2 - 50, canvas.height - 15);
+                    ctx.fillText('布剪專裁布料 & 安全防護', canvas.width / 2 + 60, canvas.height - 15);
+                }
+            }
+        ];
+
+        
+        // Start Clinic (Step 0 -> Step 1)
+        function startClinic(e) {
+            e.preventDefault();
+            AudioEngine.playClick();
+            
+            const nameInput = document.getElementById('doctor-name').value.trim();
+            if (!nameInput) return;
+
+            state.doctorName = nameInput;
+            
+            // Update Header
+            document.getElementById('header-doctor-name').innerText = state.doctorName + " 醫師";
+            document.getElementById('header-doctor-badge').classList.remove('hidden');
+
+            // Switch views
+            document.getElementById('step-0-registration').classList.add('hidden');
+            document.getElementById('step-case-room').classList.remove('hidden');
+
+            loadCase(0);
+        }
+
+        // Load Case into UI
+        function loadCase(index) {
+            state.currentCaseIndex = index;
+            state.selectedOptionIndex = null;
+            state.attemptsCurrentCase = 0;
+
+            const caseData = casesData[index];
+
+            // Update Header Progress
+            document.getElementById('case-progress-pill').innerText = `進度: ${index + 1}/4`;
+            document.getElementById('case-number-badge').innerText = `病例 0${index + 1}`;
+            document.getElementById('case-title').innerText = caseData.title;
+
+            // Update Progress Dots
+            for (let i = 1; i <= 4; i++) {
+                const dot = document.getElementById(`step-dot-${i}`);
+                if (i <= index + 1) {
+                    dot.className = "w-8 h-8 rounded-full bg-clinic-teal text-white flex items-center justify-center font-bold shadow-sm transition-all";
+                } else {
+                    dot.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold transition-all";
+                }
+            }
+
+            // Update Patient Info
+            document.getElementById('patient-name').innerText = caseData.patientName;
+            document.getElementById('case-urgency').innerText = caseData.urgency;
+            document.getElementById('patient-symptom').innerText = caseData.symptom;
+            document.getElementById('case-hint').innerText = caseData.hint;
+
+            // Render Options
+            const container = document.getElementById('prescriptions-container');
+            container.innerHTML = '';
+
+            caseData.options.forEach((opt, optIdx) => {
+                const optionCard = document.createElement('div');
+                optionCard.className = `prescription-card p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition flex items-start gap-3 hover:border-clinic-teal`;
+                optionCard.onclick = () => selectOption(optIdx);
+                optionCard.id = `option-card-${optIdx}`;
+
+                optionCard.innerHTML = `
+                    <div id="option-radio-${optIdx}" class="w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-clinic-teal hidden" id="option-radio-inner-${optIdx}"></div>
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-slate-800 leading-snug">
+                        ${opt.text}
+                    </div>
+                `;
+                container.appendChild(optionCard);
+            });
+
+            // Reset submit button
+            const btnSubmit = document.getElementById('btn-submit-diagnosis');
+            btnSubmit.disabled = true;
+            btnSubmit.className = "bg-slate-300 text-slate-500 cursor-not-allowed font-bold px-6 py-3 rounded-xl transition flex items-center gap-2";
+
+            // Render Canvas Visualizer
+            const canvas = document.getElementById('visualizer-canvas');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 180;
+            const ctx = canvas.getContext('2d');
+            caseData.drawVisualizer(ctx, canvas);
+        }
+
+        // Select Prescription Option
+        function selectOption(optIdx) {
+            AudioEngine.playClick();
+            state.selectedOptionIndex = optIdx;
+
+            const caseData = casesData[state.currentCaseIndex];
+
+            // Highlight Cards
+            caseData.options.forEach((_, idx) => {
+                const card = document.getElementById(`option-card-${idx}`);
+                const radio = document.getElementById(`option-radio-${idx}`);
+                const radioInner = document.getElementById(`option-radio-inner-${idx}`);
+
+                if (idx === optIdx) {
+                    card.className = "prescription-card p-4 rounded-2xl border-2 border-clinic-teal bg-teal-50/60 shadow-sm cursor-pointer transition flex items-start gap-3";
+                    radio.className = "w-6 h-6 rounded-full border-2 border-clinic-teal flex items-center justify-center flex-shrink-0 mt-0.5 bg-white";
+                    radioInner.classList.remove('hidden');
+                } else {
+                    card.className = "prescription-card p-4 rounded-2xl border-2 border-slate-200 bg-white cursor-pointer transition flex items-start gap-3 hover:border-clinic-teal";
+                    radio.className = "w-6 h-6 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0 mt-0.5";
+                    radioInner.classList.add('hidden');
+                }
+            });
+
+            // Enable submit button
+            const btnSubmit = document.getElementById('btn-submit-diagnosis');
+            btnSubmit.disabled = false;
+            btnSubmit.className = "bg-clinic-teal hover:bg-teal-700 text-white font-bold px-6 py-3 rounded-xl transition shadow-md shadow-teal-600/30 flex items-center gap-2 cursor-pointer";
+        }
+
+        // Evaluate Diagnosis Option
+        function evaluateDiagnosis() {
+            if (state.selectedOptionIndex === null) return;
+
+            state.attemptsCurrentCase++;
+            const currentCase = casesData[state.currentCaseIndex];
+            const chosenOption = currentCase.options[state.selectedOptionIndex];
+
+            const modal = document.getElementById('feedback-modal');
+            const iconBg = document.getElementById('modal-icon-bg');
+            const icon = document.getElementById('modal-icon');
+            const statusBadge = document.getElementById('modal-status-badge');
+            const title = document.getElementById('modal-title');
+            const explanation = document.getElementById('modal-explanation');
+            const mythBox = document.getElementById('modal-myth-box');
+            const mythText = document.getElementById('modal-myth-text');
+            const retryBtn = document.getElementById('modal-retry-btn');
+            const nextBtn = document.getElementById('modal-next-btn');
+
+            if (chosenOption.isCorrect) {
+                // Correct Diagnosis
+                AudioEngine.playSuccess();
+                
+                iconBg.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl bg-emerald-100 text-emerald-600 shadow-inner";
+                icon.className = "fa-solid fa-circle-check";
+                statusBadge.className = "text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider bg-emerald-100 text-emerald-800";
+                statusBadge.innerText = "精準診斷！成功修補";
+                title.innerText = "處方正確：完美的微創手術";
+                explanation.innerText = chosenOption.explanation;
+
+                mythBox.classList.add('hidden');
+                retryBtn.classList.add('hidden');
+                
+                nextBtn.innerText = (state.currentCaseIndex === casesData.length - 1) ? "查看診斷報告與執照 ➔" : "進入下一個病例 ➔";
+
+                // Save record
+                state.userAnswers[state.currentCaseIndex] = {
+                    caseId: currentCase.id,
+                    selectedIndex: state.selectedOptionIndex,
+                    isCorrect: true,
+                    attempts: state.attemptsCurrentCase
+                };
+
+            } else {
+                // Incorrect Diagnosis
+                AudioEngine.playError();
+
+                iconBg.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-3xl bg-amber-100 text-amber-600 shadow-inner";
+                icon.className = "fa-solid fa-triangle-exclamation";
+                statusBadge.className = "text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider bg-amber-100 text-amber-800";
+                statusBadge.innerText = "處方有誤！需要會診";
+                title.innerText = "診斷提示與物理結構檢討";
+                explanation.innerText = chosenOption.explanation;
+
+                if (chosenOption.myth) {
+                    mythBox.classList.remove('hidden');
+                    mythText.innerText = chosenOption.myth;
+                } else {
+                    mythBox.classList.add('hidden');
+                }
+
+                retryBtn.classList.remove('hidden');
+                nextBtn.innerText = "硬著頭皮跳過 ➔";
+
+                state.userAnswers[state.currentCaseIndex] = {
+                    caseId: currentCase.id,
+                    selectedIndex: state.selectedOptionIndex,
+                    isCorrect: false,
+                    attempts: state.attemptsCurrentCase
+                };
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        // Retry Current Case Option
+        function retryCase() {
+            AudioEngine.playClick();
+            document.getElementById('feedback-modal').classList.add('hidden');
+        }
+
+        // Proceed to Next Case or Final Report
+        function nextCase() {
+            AudioEngine.playClick();
+            document.getElementById('feedback-modal').classList.add('hidden');
+
+            if (state.currentCaseIndex < casesData.length - 1) {
+                loadCase(state.currentCaseIndex + 1);
+            } else {
+                showFinalReport();
+            }
+        }
+
+        // Show Final License & Competency Report
+        function showFinalReport() {
+            document.getElementById('step-case-room').classList.add('hidden');
+            document.getElementById('step-final-report').classList.remove('hidden');
+
+            // Set Metadata
+            document.getElementById('report-doctor-name').innerText = state.doctorName;
+            
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}`;
+            document.getElementById('report-date').innerText = dateStr;
+
+            // Calculate Score / Accuracy
+            let correctCount = 0;
+            state.userAnswers.forEach(ans => {
+                if (ans && ans.isCorrect) correctCount++;
+            });
+
+            const accuracy = Math.round((correctCount / casesData.length) * 100);
+            document.getElementById('report-accuracy').innerText = `${accuracy}% (${correctCount}/${casesData.length})`;
+
+            // Update Competency Badges
+            const badgeClasses = {
+                high: "text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold",
+                medium: "text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-bold"
+            };
+
+            for (let i = 0; i < 4; i++) {
+                const badge = document.getElementById(`badge-comp-${i + 1}`);
+                const isCorrect = state.userAnswers[i] && state.userAnswers[i].isCorrect;
+                if (isCorrect) {
+                    badge.className = badgeClasses.high;
+                    badge.innerText = "精通掌握";
+                } else {
+                    badge.className = badgeClasses.medium;
+                    badge.innerText = "建議複習";
+                }
+            }
+        }
+
+        // Restart Clinic Experience
+        function restartClinic() {
+            AudioEngine.playClick();
+            state.currentCaseIndex = 0;
+            state.selectedOptionIndex = null;
+            state.userAnswers = [];
+            
+            document.getElementById('step-final-report').classList.add('hidden');
+            document.getElementById('step-0-registration').classList.remove('hidden');
+        }
+
+        // Re-render visualizer on window resize for RWD canvas
+        window.addEventListener('resize', () => {
+            if (!document.getElementById('step-case-room').classList.contains('hidden')) {
+                const canvas = document.getElementById('visualizer-canvas');
+                if (canvas && casesData[state.currentCaseIndex]) {
+                    canvas.width = canvas.parentElement.clientWidth;
+                    const ctx = canvas.getContext('2d');
+                    casesData[state.currentCaseIndex].drawVisualizer(ctx, canvas);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
